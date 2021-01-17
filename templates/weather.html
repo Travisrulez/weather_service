@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+    <div class="main-w3layouts wrapper">
+        <h1>Город, для которого вы хотите узнать погоду. </h1>
+        <div class="main-agileinfo">
+            <div class="agileits-top">
+                <form action="{% url 'weather:weather-ui' %}" method="post">
+                    {% csrf_token %}
+                    <input class="text" type="text" name="city" placeholder="Город" required="">
+
+
+                    <div class="wthree-text">
+
+                        <div class="clear"></div>
+                    </div>
+                    <input type="submit" value="Узнать погоду">
+                    <a href="{% url 'weather:logout' %}">Выход</a>
+                </form>
+
+            </div>
+        </div>
+        {% if type != 'weather-get' %}
+
+            <div class="main-agileinfo">
+                <div class="agileits-top">
+                    <h1>Информация</h1>
+                    {% if error_type %}
+                        <table>
+                            <tr>
+                                <td>error_type</td>
+                                <th>{{ error_type }}</th>
+
+                            </tr>
+
+                            <tr>
+                                <td>error_info</td>
+                                <th>{{ error_info }}</th>
+
+                            </tr>
+                        </table>
+                    {% else %}
+                        
+                        <table class="table">
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Город</td>
+      <td>{{ location_name }}</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Страна</td>
+      <td>{{ location_country }}</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>Регион</td>
+      <td>{{ location_region }}</td>
+    </tr>
+    <tr>
+      <th scope="row">4</th>
+      <td>Временная зона</td>
+      <td>{{ location_timezone }}</td>
+    </tr>
+    <tr>
+      <th scope="row">5</th>
+      <td>Температура</td>
+      <td>{{ location_temperature }}</td>
+    </tr>
+    <tr>
+      <th scope="row">6</th>
+      <td>{% for des in location_weather_descriptions %}
+                                    {{ des }}
+                                {% endfor %}</td>
+      <td>{% for icon in location_weather_icons %}
+                                    <img src="{{ icon }}">
+                                {% endfor %}</td>
+    </tr>
+  </tbody>
+</table>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block scripts %}
+    {% if not user.is_authenticated %}
+        Уже авторизован
+        <script type="text/javascript">
+
+            window.location.replace('{% url 'weather:login' %}');
+        </script>
+    {% endif %}
+{% endblock %}

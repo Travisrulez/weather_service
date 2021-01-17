@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load rest_framework %}
+
+
+{% block content %}
+
+
+    <!-- main -->
+    <div class="main-w3layouts wrapper">
+        {% if type == 'register' %}
+            <h1>Регистрация</h1>
+        {% elif type == 'login' %}
+            <h1>Авторизация</h1>
+        {% endif %}
+        <div class="main-agileinfo">
+            <div class="agileits-top">
+                <form action="{% if type == 'register' %}{% url 'weather:register' %}{% elif type == 'login' %}
+{% url 'weather:login' %}{% endif %}"
+                      method="post">
+
+                    {% csrf_token %}
+                    {% render_form form %}
+                    <div class="wthree-text">
+
+                        <div class="clear"></div>
+                    </div>
+                    {% if type == 'register' %}
+                        <input type="submit" value="Зарегестрироваться.">
+                    {% elif type == 'login' %}
+                        <input type="submit" value="Авторизироваться">
+                    {% endif %}
+
+                </form>
+                {% if type == 'register' %}
+                    <p><a href="{% url 'weather:login' %}"> Авторизоваться</a></p>
+                {% elif type == 'login' %}
+                    <p>Нету аккаунта? <a href="{% url 'weather:register' %}"> Зарегестрируйтесь.</a></p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {% if user.is_authenticated %}
+        Уже авторизован
+        <script type="text/javascript">
+
+            window.location.replace('{% url 'weather:weather-ui' %}');
+        </script>
+    {% endif %}
+{% endblock %}
